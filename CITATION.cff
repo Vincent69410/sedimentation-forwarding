@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "sedimentation-forwarding: boundary stabilization of a sedimentation front by forwarding"
+authors:
+  - family-names: Amirat
+    given-names: Idir
+  - family-names: Andrieu
+    given-names: Vincent
+  - family-names: Valentin
+    given-names: Claire
+license: MIT
+repository-code: "https://github.com/Vincent69410/sedimentation-forwarding"
+preferred-citation:
+  type: article
+  title: "Boundary stabilization of the sludge blanket of a continuous clarifier-thickener by forwarding"
+  authors:
+    - family-names: Amirat
+      given-names: Idir
+    - family-names: Andrieu
+      given-names: Vincent
+    - family-names: Valentin
+      given-names: Claire
+  year: 2026
