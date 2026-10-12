@@ -128,8 +128,13 @@ class Plant:
 
         Rd, Rp = self.R(e), self.Rp(e)
         Psi0p = Rp * e + Rd
-        b3 = self.K - Rp * self.fs + Psi0p * self.vm - Rd * self.l3
-        b4 = self.K - Rp * self.fs + Psi0p * self.vm - Rd * self.l4
+        # D_yA[.] d_x y* : the flux Jacobian varies along the profile.  With
+        # d_x f_s* = 0 this contributes -deps * (sigma_e'' + 2 v_s (v_s - l_j)/eps)
+        # to the j-th column, and v_s - l_3 = -c_s, v_s - l_4 = +c_s.
+        gA = self.Spp(e) - 2 * vsd * csd / e
+        gB = self.Spp(e) + 2 * vsd * csd / e
+        b3 = self.K - Rp * self.fs + Psi0p * self.vm - Rd * self.l3 - deps * gA
+        b4 = self.K - Rp * self.fs + Psi0p * self.vm - Rd * self.l4 - deps * gB
         self.B2 = np.zeros((Nd, 2, 2)); self.C1 = np.zeros((Nd, 2)); self.C2 = np.zeros((Nd, 2))
         self.D2 = np.zeros((Nd, 2)); self.A2inv = np.zeros((Nd, 2, 2)); self.A2invB2 = np.zeros((Nd, 2, 2))
         L = self.zb - self.zs
@@ -245,9 +250,12 @@ def constants(P, mu1, mu2, r, nui, p1, p2, p2x):
     ab = (0.5 * (tr - np.sqrt(np.maximum(tr ** 2 - 4 * det, 0.0)))).min()
 
     # boundary dissipation
-    Bint1 = P.lam / P.l3s
+    # Y_3(z_s*) = K_int . Y_o  with  K_int = [lam^2/l3^2, 2 lam/l3^2, -l4^2/l3^2].
+    # The Young expansion of p3 l3 Y_3^2 therefore carries K_int_j SQUARED:
+    # (lam^2/l3^2)^2 on Y_1 and k^4 on Y_4, not K_int_j itself.
+    Bint1 = (P.lam / P.l3s) ** 2
     d1 = p1 * P.lam * np.exp(-2 * mu1 * P.zs) - 2 * (1 + 1 / nui) * P.l3s * Bint1 ** 2
-    d4 = r * np.exp(-2 * mu2 * L) * abs(P.l4s) - P.l3s * (1 + nui) * P.k ** 2
+    d4 = r * np.exp(-2 * mu2 * L) * abs(P.l4s) - P.l3s * (1 + nui) * P.k ** 4
     Sig = P.Go[0] ** 2 / d1 + P.Go[2] ** 2 / d4 if (d1 > 0 and d4 > 0) else np.inf
 
     # domain gains
@@ -278,7 +286,7 @@ def best(P, ngrid=14):
     for th in np.linspace(0.02, 0.98, ngrid):
         mu2 = th * P.mu2bar
         for nui in np.geomspace(1e-8, 1e-1, 6):
-            lo = (1 + nui) * abs(P.l4s) / (np.exp(-2 * mu2 * L) * P.l3s)
+            lo = (1 + nui) * P.k ** 3 * np.exp(2 * mu2 * L)
             hi = np.exp(-2 * mu2 * L) * P.l3b / abs(P.l4b)
             if not (lo < hi):
                 continue

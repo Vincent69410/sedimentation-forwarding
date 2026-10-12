@@ -1,7 +1,7 @@
 """Operating points.
 
 ``worked_example`` returns the plant of Section 6: a 1 m laboratory settling
-column fed with 0.5 mm silica grains.
+column fed with 2 mm polystyrene beads, with a 20 cm bed.
 """
 import numpy as np
 
@@ -25,9 +25,14 @@ def terminal_velocity(rho_s, d, rho_f=RHO_F, mu=MU_F, it=80):
     return v
 
 
-def settling_column(rho_s=2650.0, d=5e-4, eps_c=0.55, n_s=5, sigma_0=1e5,
-                    eps_in_over_eps_c=0.2, z_b=1.0, L=0.02, Nd=1200):
+def settling_column(rho_s=1050.0, d=2e-3, eps_c=0.55, n_s=5, sigma_0=1e5,
+                    eps_in_over_eps_c=0.2, z_b=1.0, L=0.20, Nd=1200):
     """A continuous settling column.
+
+    The default is the operating point of Section 6: 2 mm polystyrene beads
+    in water, a 20 cm bed at the bottom of a 1 m column. Nearly neutrally
+    buoyant beads keep K = g(rho_s - rho_f)/rho_s small, which is what makes
+    the small-gain condition hold on a bed one can actually see.
 
     Parameters
     ----------
@@ -48,12 +53,15 @@ def settling_column(rho_s=2650.0, d=5e-4, eps_c=0.55, n_s=5, sigma_0=1e5,
 
 
 def worked_example(Nd=1200):
-    """The operating point of Section 6, with the pole c* already solved."""
+    """The operating point of Section 6, with the pole c* already solved.
+
+    2 mm polystyrene beads, 20 cm bed, 1 m column.
+    """
     P = settling_column(Nd=Nd)
     P.solve_cstar()
     return P
 
 
-def reynolds(rho_s=2650.0, d=5e-4, rho_f=RHO_F, mu=MU_F):
+def reynolds(rho_s=1050.0, d=2e-3, rho_f=RHO_F, mu=MU_F):
     """Particle Reynolds number at the terminal velocity."""
     return rho_f * terminal_velocity(rho_s, d, rho_f, mu) * d / mu

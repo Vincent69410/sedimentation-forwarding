@@ -33,7 +33,7 @@ print(f"  Delta_z   {P.Dz:.5f}")
 print(f"  gamma_v   {P.gv:.5f}")
 print(f"  G         {P.G:.5f}")
 
-print("\n=== Condition 17 ===")
+print("\n=== Condition 16 ===")
 print(f"  alphabar  {b['alphabar']:.4f}")
 print(f"  a_eta     {b['aeta']:.4e}")
 print(f"  a_o       {b['ao']:.4e}")

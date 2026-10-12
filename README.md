@@ -47,8 +47,13 @@ python scripts/reproduce_section6.py
 
 ## The operating point
 
-A column of depth 1 m fed with 0.5 mm silica grains at 11 % solid fraction,
-drained at the bottom, with a 2 cm sediment bed. Eight constants, no data file.
+A column of depth 1 m fed with 2 mm polystyrene beads at 11 % solid fraction,
+drained at the bottom, with a 20 cm sediment bed. Eight constants, no data file.
+
+Beads nearly matched in density to water are chosen on purpose. The margin in
+the small-gain condition is governed by `K = g (rho_s - rho_f) / rho_s`, which
+is 0.467 m/s^2 here against 6.11 for a mineral grain, and that factor of
+thirteen is what allows a bed of 20 cm rather than 2 cm.
 
 ```python
 import sedimentation_forwarding as sf
@@ -56,9 +61,9 @@ import sedimentation_forwarding as sf
 P = sf.worked_example()
 b = sf.best(P, ngrid=14)
 
-print(P.cstar)      # -4.358965e-04   transmission pole
-print(b['ratio'])   #  0.3598         small-gain condition, satisfied
-print(b['margin'])  #  9.5074e-01     certified decay rate
+print(P.cstar)      # -5.184904e-06   transmission pole
+print(b['ratio'])   #  0.2863         small-gain condition, satisfied
+print(b['margin'])  #  0.053743       certified decay rate (also bounded by 2*kappa)
 ```
 
 What the paper claims, and what the notebook checks:
@@ -66,10 +71,11 @@ What the paper claims, and what the notebook checks:
 * `c*` from the fixed-point equation agrees with the zero of `det D` to eleven
   digits, and the two computations share only the stationary profile and the
   propagator;
-* closing the loop moves that zero to `-κ` exactly, to a relative 3.5e-11,
-  uniformly over `κ ∈ [3.16e-2, 1]`;
-* the argument principle finds no zero in the closed right half-plane and
-  exactly one in `[-3,0] × [-30,30]`, so the spectral abscissa is exactly `-κ`.
+* closing the loop moves that zero to `-κ` exactly, uniformly over
+  `κ ∈ [3.16e-2, 1]`;
+* the nonlinear closed loop, solved on the physical domain by a shock-capturing
+  scheme, returns a 10 mm displacement of the bed to its set point in about
+  twelve seconds (`scripts/nonlinear_closed_loop.py`).
 
 ## Your own plant
 
@@ -82,11 +88,22 @@ Q.solve_cstar()
 sf.best(Q)['ratio']
 ```
 
-Two things govern whether the small-gain condition holds: the compressive
-modulus `rho_s * Q.cs[0]**2` of the bed, and its thickness `L`. On this family
-the condition fails below about 0.45 MPa.
+Three things govern whether the small-gain condition holds. The compressive
+modulus `rho_s * Q.cs[0]**2` of the bed: on the operating point above the
+condition fails below about 0.10 MPa. The bed thickness `L`: `alphabar` goes
+like `1/L` and `a_o` like `L`, and the condition fails above about 60 cm. And
+the density contrast, through `K`: at the same bead diameter but
+`rho_s = 2650` the thickness limit drops to 26 cm, and on a 0.5 mm mineral
+grain to 7 cm.
 
-Two traps worth knowing if you modify the code. The argument-principle count
+One subtlety in `model.py` worth knowing before you change it. The matrix
+`B2` built in `Plant._build` carries three contributions: the Jacobian of the
+source, the variation of the flux Jacobian along the profile
+(`(D_yA[.]) d_x y*`), and the `x`-dependence of the diagonalizing matrix. The
+second is easy to drop and costs about 2% on `B2`; it is checked against a
+finite-difference linearization of the nonlinear right-hand side.
+
+Two further traps. The argument-principle count
 must use the **raw** determinant: normalizing the rows of the matrix is
 non-analytic and silently corrupts the winding number. And the contour needs
 enough points — a few hundred per oscillation — or `np.unwrap` aliases and
