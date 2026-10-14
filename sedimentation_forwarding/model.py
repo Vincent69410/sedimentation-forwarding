@@ -17,7 +17,7 @@ with the power-law closures
 
 Reference
 ---------
-I. Amirat, V. Andrieu, C. Valentin et al., "Boundary stabilization of the
+M. O. Amirat, V. Andrieu, M. Bajodek, C. Valentin, "Boundary stabilization of the
 sludge blanket of a continuous clarifier-thickener by forwarding".
 """
 import numpy as np

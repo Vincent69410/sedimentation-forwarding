@@ -9,7 +9,7 @@ Unknowns (a, b, eta, nu, u) with a = Y3(zs*), b = Y4(zs*), nu = G_o . Y_o.
 
 Reference
 ---------
-I. Amirat, V. Andrieu, C. Valentin et al., "Boundary stabilization of the
+M. O. Amirat, V. Andrieu, M. Bajodek, C. Valentin, "Boundary stabilization of the
 sludge blanket of a continuous clarifier-thickener by forwarding".
 """
 import numpy as np

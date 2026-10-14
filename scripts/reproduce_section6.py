@@ -3,7 +3,8 @@
     python scripts/reproduce_section6.py
 
 Takes about two minutes. The notebook in notebooks/ does the same thing with
-commentary and a figure.
+commentary and draws Figures 3 and 4; scripts/make_figures.py writes them
+as PDF.
 """
 import sys
 import os
@@ -33,7 +34,7 @@ print(f"  Delta_z   {P.Dz:.5f}")
 print(f"  gamma_v   {P.gv:.5f}")
 print(f"  G         {P.G:.5f}")
 
-print("\n=== Condition 16 ===")
+print("\n=== small-gain condition ===")
 print(f"  alphabar  {b['alphabar']:.4f}")
 print(f"  a_eta     {b['aeta']:.4e}")
 print(f"  a_o       {b['ao']:.4e}")

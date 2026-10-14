@@ -5,7 +5,7 @@
 
 Companion code for the paper
 
-> I. Amirat, V. Andrieu, C. Valentin, *Boundary stabilization of the sludge
+> M. O. Amirat, V. Andrieu, M. Bajodek, C. Valentin, *Boundary stabilization of the sludge
 > blanket of a continuous clarifier–thickener by forwarding*, 2026.
 
 A suspension settles in a column. Above a critical solid fraction the particles
@@ -24,7 +24,9 @@ from a characteristic determinant that discretizes the generator nowhere.
 ## Run it now
 
 Click the Colab badge. Nothing to install, about three minutes on a free CPU,
-and the notebook reproduces every number of Section 6.
+and the notebook reproduces every number of Section 6 and draws its two
+figures (Figure 3, the stationary profile and the pole equation; Figure 4, the
+nonlinear closed loop).
 
 ## Run it locally
 
@@ -32,7 +34,8 @@ and the notebook reproduces every number of Section 6.
 git clone https://github.com/Vincent69410/sedimentation-forwarding.git
 cd sedimentation-forwarding
 pip install -r requirements.txt
-python scripts/reproduce_section6.py
+python scripts/reproduce_section6.py   # the numbers of Section 6
+python scripts/make_figures.py         # Figures 3 and 4, as PDF in figs/
 ```
 
 ## What is in here
@@ -42,13 +45,18 @@ python scripts/reproduce_section6.py
 | `sedimentation_forwarding/model.py` | the design chain: stationary profile by shooting, linearization, interface gain `G_o`, transmission pole `c*` by fixed point, Sylvester kernel, input gain `G`, then the ISS constants and the small-gain ratio |
 | `sedimentation_forwarding/spectrum.py` | the 5×5 characteristic determinant `D(s)`. Ω₁ in closed form, Ω₂ by RK4 on the augmented flow, root finding by Newton, zero counting by the argument principle |
 | `sedimentation_forwarding/examples.py` | the operating point of Section 6, and a constructor taking physical parameters directly |
+| `sedimentation_forwarding/closed_loop.py` | the nonlinear plant on the physical domain, shock-capturing scheme, in open or closed loop |
+| `sedimentation_forwarding/figures.py` | Figures 3 and 4, drawn exactly as printed |
+| `sedimentation_forwarding/data/` | the three nonlinear runs of Figure 4 (about a quarter of an hour each to recompute) |
 | `notebooks/worked_example.ipynb` | the Colab notebook |
 | `scripts/reproduce_section6.py` | the same numbers, no notebook |
+| `scripts/make_figures.py` | Figures 3 and 4 as PDF; `--rerun` recomputes the nonlinear runs |
+| `scripts/nonlinear_closed_loop.py` | one nonlinear run, with its parameters on the command line |
 
 ## The operating point
 
 A column of depth 1 m fed with 2 mm polystyrene beads at 11 % solid fraction,
-drained at the bottom, with a 20 cm sediment bed. Eight constants, no data file.
+drained at the bottom, with a 20 cm sediment bed. Eight constants.
 
 Beads nearly matched in density to water are chosen on purpose. The margin in
 the small-gain condition is governed by `K = g (rho_s - rho_f) / rho_s`, which
@@ -75,7 +83,7 @@ What the paper claims, and what the notebook checks:
   `κ ∈ [3.16e-2, 1]`;
 * the nonlinear closed loop, solved on the physical domain by a shock-capturing
   scheme, returns a 10 mm displacement of the bed to its set point in about
-  twelve seconds (`scripts/nonlinear_closed_loop.py`).
+  twelve seconds (Figure 4, `sedimentation_forwarding/closed_loop.py`).
 
 ## Your own plant
 
@@ -111,10 +119,9 @@ returns a plausible but wrong count.
 
 ## Scope
 
-The clarifier that motivates the model is not in this repository. The code is
-general, so its parameters can be set by anyone who has them, but the
-calibration used in the paper rests on plant data that we are not free to
-redistribute.
+The municipal clarifier that motivates the model is not in this repository.
+The code is general, so its parameters can be set by anyone who has them, but
+its calibration rests on plant data that we are not free to redistribute.
 
 ## Citing
 

@@ -6,6 +6,8 @@ authors:
     given-names: Idir
   - family-names: Andrieu
     given-names: Vincent
+  - family-names: Bajodek
+    given-names: Mathieu
   - family-names: Valentin
     given-names: Claire
 license: MIT
@@ -18,6 +20,8 @@ preferred-citation:
       given-names: Idir
     - family-names: Andrieu
       given-names: Vincent
+    - family-names: Bajodek
+      given-names: Mathieu
     - family-names: Valentin
       given-names: Claire
   year: 2026
