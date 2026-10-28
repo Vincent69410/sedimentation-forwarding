@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "sedimentation-forwarding: boundary stabilization of a sedimentation front by forwarding"
+authors:
+  - family-names: Amirat
+    given-names: Idir
+  - family-names: Andrieu
+    given-names: Vincent
+  - family-names: Bajodek
+    given-names: Mathieu
+  - family-names: Valentin
+    given-names: Claire
+version: "1.2.0"
+date-released: "2026-10-28"
+license: MIT
+repository-code: "https://github.com/Vincent69410/sedimentation-forwarding"
+preferred-citation:
+  type: article
+  title: "Boundary stabilization of a moving interface in a 2x2 weakly hyperbolic system of balance laws: application to continuous sedimentation"
+  authors:
+    - family-names: Amirat
+      given-names: Idir
+    - family-names: Andrieu
+      given-names: Vincent
+    - family-names: Bajodek
+      given-names: Mathieu
+    - family-names: Valentin
+      given-names: Claire
+  year: 2026
